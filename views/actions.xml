@@ -1,0 +1,37 @@
+<odoo>
+    <data>
+
+        <!-- Email template here -->
+        <record id="account_statement_email" model="mail.template">
+            <field name="name">Account Statement Email</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="report_template" ref="statement_of_account.action_print_statement"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">{{ object.lang }}</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_to">{{ object.email_formatted }}</field>
+            <field name="subject">{{ object.company_id.name }} Account Statement</field>
+            <field name="body_html">
+<![CDATA[
+    <p>Dear <t t-esc="object.name"/>,</p>
+    <p>Here is your account statement.</p>
+    <p>Thank you.</p>
+]]>
+            </field>
+        </record>
+
+
+        <!-- Create server action to send statement by email -->
+        <record id="send_statement_by_email" model="ir.actions.server">
+            <field name="binding_type">action</field>
+            <field name="child_ids" eval="[(6, 0, [])]"/>
+            <field name="template_id" ref="statement_of_account.account_statement_email"/>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="name">Send Statement By Email</field>
+            <field name="sequence">1</field>
+            <field name="state">email</field>
+            <field name="binding_model_id" ref="model_res_partner"/>
+        </record>
+
+    </data>
+</odoo>

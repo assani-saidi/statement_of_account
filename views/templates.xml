@@ -1,0 +1,226 @@
+<odoo>
+
+    <template id="statement_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <style>
+                        .page{
+                            font-size: 0.85em !important;
+                        }
+                    </style>
+                    <h3 class="pb-2">Statement Of Account</h3>
+                    <span class="pb-1">From:
+                        <b>
+                            <t t-esc="statement_from"/>
+                        </b>
+                        - To:
+                        <b>
+                            <t t-esc="statement_to"/>
+                        </b>
+                    </span>
+                    <br/>
+                    <hr/>
+                    <br/>
+
+                    <!-- table here -->
+                    <t t-foreach="rows" t-as="customer">
+                        <h6 class="pb-2">Statement for:
+                            <b>
+                                <t t-esc="customer[0]"/>
+                            </b>
+                        </h6>
+                        <table class="table-sm table-striped w-100 m-2">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <b>Date</b>
+                                    </th>
+                                    <th>
+                                        <b>Entry Type</b>
+                                    </th>
+                                    <th>
+                                        <b>Reference</b>
+                                    </th>
+                                    <th>
+                                        <b>Description</b>
+                                    </th>
+				    <th class="text-end">
+					<b>ZWL Amount</b>
+				    </th>
+                                    <th class="text-end">
+                                        <b>Debit</b>
+                                    </th>
+                                    <th class="text-end">
+                                        <b>Credit</b>
+                                    </th>
+                                    <th class="text-end">
+                                        <b>Balance</b>
+                                    </th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <td colspan="7">
+                                            <b>
+                                                OPENING BALANCE
+                                            </b>
+                                        </td>
+                                        <td>
+                                            <b>
+                                                <t t-esc="customer[3]"/>
+                                            </b>
+                                        </td>
+                                </tr>
+                                <t t-foreach="customer[1]" t-as="row">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="row['date']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="row['entry_type']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="row['reference']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="row['description']"/>
+                                        </td>
+					<td class="text-end">
+					    <t t-esc="row['amount_in_currency']"/>
+					</td>
+                                        <td class="text-end">
+                                            <t t-esc="row['debit']"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-esc="row['credit']"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-esc="row['formatted_balance']"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td colspan="7">
+                                            <b>
+                                                CLOSING BALANCE
+                                            </b>
+                                        </td>
+                                        <td>
+                                            <b>
+                                                <t t-esc="customer[2]"/>
+                                            </b>
+                                        </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+                        <br/>
+                        <hr/>
+                        <br/>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="_statement_report">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-call="statement_of_account.statement_report_document"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="statement_report_document">
+        <div class="page">
+            <style>
+                .page{
+                font-size: 0.85em !important;
+                }
+            </style>
+            <h3>Statement Of Account</h3>
+            <h4>Currency:
+                <b>
+                    <t t-esc="currency"/>
+                </b>
+            </h4>
+            <h6>From:
+                <b>
+                    <t t-esc="statement_from"/>
+                </b>
+                - To:
+                <b>
+                    <t t-esc="statement_to"/>
+                </b>
+            </h6>
+            <br/>
+
+            <!-- table here -->
+            <table class="table-sm table-striped w-100 m-2">
+                <thead>
+                    <tr>
+                        <th>
+                            <b>Date</b>
+                        </th>
+                        <th>
+                            <b>Batch Number</b>
+                        </th>
+                        <th>
+                            <b>Product Name</b>
+                        </th>
+                        <th>
+                            <b>Quantity</b>
+                        </th>
+                        <th>
+                            <b>Debit</b>
+                        </th>
+                        <th>
+                            <b>Credit</b>
+                        </th>
+                        <th>
+                            <b>Balance</b>
+                        </th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                    <t t-foreach="rows" t-as="customer">
+
+                        <t t-foreach="customer" t-as="row">
+                            <tr>
+                                <td t-esc="row['date']"/>
+                                <td t-esc="row['batch']"/>
+                                <td t-esc="row['product']"/>
+                                <td t-esc="row['quantity']"/>
+                                <td t-esc="row['debit']"/>
+                                <td t-esc="row['credit']"/>
+                                <td t-esc="row['balance']"/>
+                            </tr>
+                        </t>
+                        <tr>
+                            <td colspan="6">
+                                <b>
+                                    CURRENT TOTAL AMOUNT DUE
+                                </b>
+                            </td>
+                            <td>
+                                <b>
+                                    <t t-esc="customer[2]"/>
+                                </b>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+
+            </table>
+        </div>
+    </template>
+
+</odoo>

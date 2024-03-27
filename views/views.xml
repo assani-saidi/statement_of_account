@@ -1,0 +1,75 @@
+<odoo>
+    <data>
+
+        <!-- Form view for statement -->
+        <record id="statement_form_view" model="ir.ui.view">
+            <field name="name">statement_form_view</field>
+            <field name="model">statement_of_account.statement</field>
+            <field name="arch" type="xml">
+                <form string="Statement Of Account">
+                    <sheet>
+                        <h2>Select the date range</h2>
+                        <hr/>
+                        <br/>
+                        <group>
+                            <group>
+                                <field name="statement_from" required="1"/>
+                            </group>
+                            <group>
+                                <field name="statement_to" required="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Print Statement" name="print_statement" type="object" class="btn-primary"/>
+                        <button string="Send By Email" name="send_statement_by_email" type="object" class="btn-secondary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Button on partner form to print statement -->
+        <record id="statement_print_button_form_view" model="ir.ui.view">
+            <field name="name">statement_of_account.button_form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <div>
+                        <button name="open_statement" string="Print Statement" type="object"
+                                class="btn-primary"
+                                data-hotkey="p"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Button on partner tree to print statement -->
+        <record id="statement_print_button_tree_view" model="ir.ui.view">
+            <field name="name">statement_of_account.statement_button_tree_view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='display_name']" position="before">
+                    <header>
+                        <button name="open_statement" string="Print Statement" type="object" class="btn-primary"/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Report Action -->
+        <record id="action_print_statement" model="ir.actions.report">
+            <field name="name">Statement Of Account</field>
+            <field name="model">res.partner</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">statement_of_account.statement_report</field>
+            <field name="report_file">statement_of_account.statement_report</field>
+            <field name="print_report_name">'%s statement of account' % object.name</field>
+            <field name="binding_model_id" ref="model_res_partner"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>
